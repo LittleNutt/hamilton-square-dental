@@ -88,3 +88,205 @@ if (contactForm) {
     window.location.href = `mailto:dr.tsai@hamiltonsquaredental.com?subject=${subject}&body=${bodyText}`;
   });
 }
+
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const hasGSAP = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+
+function swapImage(image, src, options = {}) {
+  if (!image || !src || image.getAttribute("src") === src) return;
+  if (options.fade && hasGSAP && !prefersReducedMotion) {
+    gsap.killTweensOf(image, "autoAlpha,opacity,visibility");
+    gsap.to(image, {
+      autoAlpha: 0,
+      duration: 0.16,
+      ease: "power2.out",
+      onComplete: () => {
+        image.setAttribute("src", src);
+        gsap.to(image, {
+          autoAlpha: options.opacity ?? 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
+    });
+    return;
+  }
+  image.setAttribute("src", src);
+}
+
+if (document.body.dataset.page === "home" && hasGSAP && !prefersReducedMotion) {
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.from(".hero .eyebrow, .hero h1, .hero__lead, .hero__actions", {
+    y: 28,
+    opacity: 0,
+    duration: 0.9,
+    ease: "power3.out",
+    stagger: 0.08
+  });
+
+  gsap.to("[data-hero-parallax]", {
+    yPercent: -8,
+    scale: 1.045,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".hero",
+      start: "top top",
+      end: "bottom top",
+      scrub: true
+    }
+  });
+
+  const storySteps = gsap.utils.toArray("[data-story-step]");
+  storySteps.forEach((step) => {
+    ScrollTrigger.create({
+      trigger: step,
+      start: "top 58%",
+      end: "bottom 42%",
+      onEnter: () => setActiveStoryStep(step),
+      onEnterBack: () => setActiveStoryStep(step)
+    });
+
+    const panel = step.querySelector("[data-story-panel]");
+    const panelImage = panel?.querySelector("img");
+
+    if (panel && panelImage) {
+      gsap.fromTo(
+        panel,
+        { clipPath: "inset(10% 0 10% 0)", y: 44 },
+        {
+          clipPath: "inset(0% 0 0% 0)",
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: step,
+            start: "top 82%",
+            end: "center 46%",
+            scrub: true
+          }
+        }
+      );
+
+      gsap.fromTo(
+        panelImage,
+        { scale: 1.14, yPercent: 8 },
+        {
+          scale: 1.02,
+          yPercent: -5,
+          ease: "none",
+          scrollTrigger: {
+            trigger: step,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        }
+      );
+    }
+  });
+
+  gsap.from(".home-service-line", {
+    x: 32,
+    opacity: 0,
+    duration: 0.7,
+    ease: "power3.out",
+    stagger: 0.08,
+    scrollTrigger: {
+      trigger: ".home-services-showcase",
+      start: "top 62%"
+    }
+  });
+
+  gsap.from("[data-doctor-reveal] img", {
+    clipPath: "inset(12% 0 12% 0)",
+    scale: 1.08,
+    duration: 1,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: ".home-doctor-scene",
+      start: "top 62%"
+    }
+  });
+
+  const quotes = gsap.utils.toArray("[data-review-quote]");
+  let activeQuoteIndex = 0;
+  if (quotes.length) {
+    setActiveQuote(quotes, quotes[0]);
+  }
+  ScrollTrigger.create({
+    trigger: ".home-review-stage",
+    start: "top 70%",
+    end: "bottom 30%",
+    onUpdate: (self) => {
+      const nextIndex = Math.min(quotes.length - 1, Math.floor(self.progress * quotes.length));
+      if (nextIndex !== activeQuoteIndex) {
+        activeQuoteIndex = nextIndex;
+        setActiveQuote(quotes, quotes[nextIndex]);
+      }
+    }
+  });
+}
+
+function setActiveStoryStep(step) {
+  document.querySelectorAll("[data-story-step]").forEach((item) => {
+    item.classList.toggle("is-active", item === step);
+  });
+}
+
+function setActiveQuote(quotes, activeQuote) {
+  quotes.forEach((quote) => {
+    const isActive = quote === activeQuote;
+    quote.classList.toggle("is-active", isActive);
+    if (hasGSAP && !prefersReducedMotion) {
+      gsap.to(quote, {
+        autoAlpha: isActive ? 1 : 0,
+        y: isActive ? 0 : 24,
+        duration: 0.45,
+        ease: "power2.out"
+      });
+    }
+  });
+}
+
+const servicePreviewImage = document.querySelector("[data-service-image]");
+const serviceLines = document.querySelectorAll("[data-service-line]");
+
+function setActiveServiceLine(line) {
+  serviceLines.forEach((item) => {
+    item.classList.toggle("is-active", item === line);
+  });
+  swapImage(servicePreviewImage, line.dataset.serviceSrc, { fade: true, opacity: 0.88 });
+}
+
+serviceLines.forEach((line) => {
+  line.addEventListener("mouseenter", () => {
+    setActiveServiceLine(line);
+  });
+
+  line.addEventListener("focus", () => {
+    setActiveServiceLine(line);
+  });
+});
+
+if (document.body.dataset.page === "home" && hasGSAP && !prefersReducedMotion) {
+  serviceLines.forEach((line) => {
+    ScrollTrigger.create({
+      trigger: line,
+      start: "top 58%",
+      end: "bottom 42%",
+      onEnter: () => setActiveServiceLine(line),
+      onEnterBack: () => setActiveServiceLine(line)
+    });
+  });
+
+  gsap.to(".home-service-visual img", {
+    yPercent: -7,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".home-services-showcase",
+      start: "top bottom",
+      end: "bottom top",
+      scrub: true
+    }
+  });
+}
