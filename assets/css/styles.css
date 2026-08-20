@@ -1530,6 +1530,25 @@ body {
   color: var(--muted);
 }
 
+.page-hero:not(.page-hero--with-media) {
+  background: var(--paper);
+  text-align: center;
+}
+
+.page-hero:not(.page-hero--with-media) .section__inner {
+  max-width: 940px;
+}
+
+.page-hero:not(.page-hero--with-media) .eyebrow {
+  justify-content: center;
+}
+
+.page-hero:not(.page-hero--with-media) .section-title,
+.page-hero:not(.page-hero--with-media) .section-copy {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .page-hero--with-media {
   padding: 0;
   overflow: hidden;
@@ -1569,6 +1588,19 @@ body {
   padding: 0;
   background: transparent;
   box-shadow: none;
+}
+
+.doctor-card__photo {
+  height: 390px;
+  overflow: hidden;
+  background: #dfeae5;
+}
+
+.doctor-card__photo img {
+  height: 100%;
+  transform: scale(1.82);
+  transform-origin: 56% 50%;
+  object-position: 56% 50%;
 }
 
 .bio-list {
@@ -1640,6 +1672,56 @@ body {
   aspect-ratio: 3 / 4;
 }
 
+.intro-split--centered {
+  display: block;
+  max-width: 940px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.intro-split--centered .eyebrow {
+  justify-content: center;
+}
+
+.intro-split--centered .section-title {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.review-exact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.review-exact-card {
+  display: flex;
+  min-height: 260px;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid var(--line);
+  padding: 28px;
+  background: rgba(251, 247, 239, 0.72);
+}
+
+.review-exact-card blockquote {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.55rem, 2.7vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.review-exact-card cite {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .quote-list {
   margin-top: 54px;
   border-top: 1px solid var(--line);
@@ -1696,6 +1778,7 @@ body {
 
   .hero__inner,
   .intro-split,
+  .review-exact-grid,
   .page-hero__grid,
   .doctor-card,
   .service-row,
@@ -1723,6 +1806,10 @@ body {
   .page-hero__image {
     min-height: 360px;
     margin-right: 0;
+  }
+
+  .doctor-card__photo {
+    width: min(360px, 100%);
   }
 }
 
@@ -1753,6 +1840,14 @@ body {
 
   .page-hero__image {
     min-height: 280px;
+  }
+
+  .doctor-card__photo {
+    height: 340px;
+  }
+
+  .review-exact-grid {
+    grid-template-columns: 1fr;
   }
 
   .index-row {
