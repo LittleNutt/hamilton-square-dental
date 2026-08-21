@@ -63,6 +63,21 @@ document.querySelectorAll(".faq-item button").forEach((button) => {
   });
 });
 
+document.querySelectorAll("[data-before-after]").forEach((card) => {
+  const slider = card.querySelector(".before-after-slider");
+  const range = card.querySelector(".before-after-slider__range");
+  if (!slider || !range) return;
+
+  const updateSlider = () => {
+    const value = Math.min(100, Math.max(0, Number(range.value) || 0));
+    slider.style.setProperty("--position", `${value}%`);
+  };
+
+  range.addEventListener("input", updateSlider);
+  range.addEventListener("change", updateSlider);
+  updateSlider();
+});
+
 const contactForm = document.querySelector("[data-contact-form]");
 if (contactForm) {
   contactForm.addEventListener("submit", (event) => {
