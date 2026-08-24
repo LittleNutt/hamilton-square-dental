@@ -294,14 +294,4 @@ if (document.body.dataset.page === "home" && hasGSAP && !prefersReducedMotion) {
     });
   });
 
-  gsap.to(".home-service-visual img", {
-    yPercent: -7,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".home-services-showcase",
-      start: "top bottom",
-      end: "bottom top",
-      scrub: true
-    }
-  });
 }
