@@ -78,6 +78,36 @@ document.querySelectorAll("[data-before-after]").forEach((card) => {
   updateSlider();
 });
 
+const techStory = document.querySelector("[data-tech-story]");
+if (techStory) {
+  const techImage = techStory.querySelector("[data-tech-image]");
+  const techKicker = techStory.querySelector("[data-tech-kicker]");
+  const techTitle = techStory.querySelector("[data-tech-title]");
+  const techCopy = techStory.querySelector("[data-tech-copy]");
+  const techTriggers = techStory.querySelectorAll("[data-tech-trigger]");
+
+  const setActiveTech = (trigger) => {
+    techTriggers.forEach((item) => {
+      const isActive = item === trigger;
+      item.classList.toggle("is-active", isActive);
+      item.setAttribute("aria-pressed", String(isActive));
+    });
+
+    if (techImage) {
+      swapImage(techImage, trigger.dataset.techSrc, { fade: true });
+      techImage.alt = trigger.dataset.techAlt || techImage.alt;
+    }
+    if (techKicker) techKicker.textContent = trigger.dataset.techKicker || "";
+    if (techTitle) techTitle.textContent = trigger.dataset.techTitle || "";
+    if (techCopy) techCopy.textContent = trigger.dataset.techCopy || "";
+  };
+
+  techTriggers.forEach((trigger) => {
+    trigger.setAttribute("aria-pressed", String(trigger.classList.contains("is-active")));
+    trigger.addEventListener("click", () => setActiveTech(trigger));
+  });
+}
+
 const contactForm = document.querySelector("[data-contact-form]");
 if (contactForm) {
   contactForm.addEventListener("submit", (event) => {
