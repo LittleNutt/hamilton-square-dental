@@ -293,14 +293,12 @@ function setActiveQuote(quotes, activeQuote) {
   });
 }
 
-const servicePreviewImage = document.querySelector("[data-service-image]");
 const serviceLines = document.querySelectorAll("[data-service-line]");
 
 function setActiveServiceLine(line) {
   serviceLines.forEach((item) => {
     item.classList.toggle("is-active", item === line);
   });
-  swapImage(servicePreviewImage, line.dataset.serviceSrc, { fade: true, opacity: 0.88 });
 }
 
 serviceLines.forEach((line) => {
